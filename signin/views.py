@@ -10,6 +10,11 @@ from signin.forms import UserProfileForm
 from examresults.models import CivilServicesTitle
 from signin.models import UsersCivilServiceTitle
 import json
+from django.core.exceptions import (
+    PermissionDenied,
+    SuspiciousOperation,
+    ObjectDoesNotExist,
+)
 
 
 class SignInView(FormView):
@@ -52,7 +57,18 @@ class SignInView(FormView):
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect(reverse("dashboard:dashboard"))
+            nxt = self.request.GET.get("next")
+            # print(nxt)
+            if nxt is None:
+                return redirect("dashboard:dashboard")
+            elif not is_safe_url(
+                url=nxt,
+                allowed_hosts={self.request.get_host()},
+                require_https=self.request.is_secure(),
+            ):
+                return redirect("dashboard:dashboard")
+            else:
+                return redirect(nxt)
         return super(SignInView, self).get(request, *args, **kwargs)
 
 
@@ -211,3 +227,35 @@ class SaveCivilServiceTitleView(View):
                 # print ('inside post else')
                 response_data["response_data"] = "User not authenticated"
                 return JsonResponse(response_data, status=200)
+
+
+def permission_denied_view(request):
+    raise PermissionDenied
+
+
+def bad_request_view(request):
+    raise SuspiciousOperation
+
+
+def server_error_view(request):
+    raise ObjectDoesNotExist
+
+
+def handler404(request, *args, **argv):
+    context = {"code": 404}
+    return render(request, "errors/errors.html", context=context)
+
+
+def handler403(request, *args, **argv):
+    context = {"code": 403}
+    return render(request, "errors/errors.html", context=context)
+
+
+def handler400(request, *args, **argv):
+    context = {"code": 400}
+    return render(request, "errors/errors.html", context=context)
+
+
+def handler500(request, *args, **argv):
+    context = {"code": 500}
+    return render(request, "errors/errors.html", context=context)
