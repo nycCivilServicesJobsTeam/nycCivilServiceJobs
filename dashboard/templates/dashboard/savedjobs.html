@@ -26,6 +26,8 @@
                     class="nav-item list-group-item list-group-item-action bg-light">Dashboard</a>
                 <a href="{% url 'dashboard:savedjobs' %}"
                     class="nav-item list-group-item list-group-item-action bg-light text-success"> Saved Jobs</a>
+                <a href="{% url 'dashboard:recommendedjobs' %}"
+                    class="nav-item list-group-item list-group-item-action bg-light"> Recommended Jobs</a>
                 <a href="{% url 'dashboard:subscription' %}" class="list-group-item list-group-item-action bg-light">Subscriptions</a>
             </div>
         </div>
@@ -114,14 +116,14 @@
                                 title="Posting open to Public">{{job.posting_type}}
                             {% endif %}</span>
                                             <span class="text-white badge py-2 px-3"
-                                                style="margin-left: 5px; background-color:olive">{{job.career_level }}</span>
+                                                style="margin-left: 5px; background-color:salmon">{{job.career_level }}</span>
                                             {% if job.post_until is None %}
                                             <span class="text-white badge py-2 px-3"
-                                                style="margin-left: 5px; background-color:salmon">Deadline: Until
+                                                style="margin-left: 5px; background-color:rgb(59, 168, 148)">Deadline: Until
                                                 Position is Filled</span>
                                             {% else %}
                                             <span class="text-white badge py-2 px-3"
-                                                style="margin-left: 5px; background-color:salmon">Deadline:
+                                                style="margin-left: 5px; background-color:rgb(59, 168, 148)">Deadline:
                                                 {{job.post_until }}</span>
                                             {% endif %}
 
@@ -259,7 +261,7 @@
 
                         </div>
                         {% else %}
-                        <h2 class="ml-4">You do not have any saved jobs.</h2>
+                        <h4 class="ml-4 pt-1 pl-4">You do not have any saved jobs.</h4>
                         {% endif %}
 
                     </div>
